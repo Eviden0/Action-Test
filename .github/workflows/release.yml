@@ -55,7 +55,7 @@ jobs:
       - name: List generated files
         run: |
           echo "Generated files:"
-          if [ "${{ matrix.os }}" == "windows-latest" ]; then powershell Rename-Item action-windows-latest action-windows-latest.exe; else ls -la; fi
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then powershell Rename-Item action-windows-latest action-windows-latest.exe&&dir; else ls -la; fi
         shell: bash
 
       - name: Upload the executable as an artifact
