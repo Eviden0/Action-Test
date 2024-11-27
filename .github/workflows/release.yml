@@ -75,12 +75,6 @@ jobs:
           name: action-ubuntu-latest-executable # 下载 Ubuntu 工件
           path: .
 
-      - name: Download Windows build artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: action-windows-latest-executable # 下载 Windows 工件
-          path: .
-
       - name: Download macOS build artifact
         uses: actions/download-artifact@v3
         with:
