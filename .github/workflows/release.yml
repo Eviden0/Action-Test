@@ -2,10 +2,8 @@ name: Release
 
 on:
   push:
-    branches:
-      - master # 确保推送到 master 分支触发工作流
     tags:
-      - "v1.0.0"
+      - "v*.*.*"
 permissions:
   contents: write # 允许写入仓库内容（包括创建 Releases）
 
