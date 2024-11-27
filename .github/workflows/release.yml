@@ -4,12 +4,25 @@ on:
   push:
     tags:
       - "v*" # 监听所有以 v 开头的标签
+
 permissions:
   contents: write # 允许写入仓库内容（包括创建 Releases）
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest] # 构建多个操作系统
+        go-version: ["1.21"]
+        include:
+          - os: ubuntu-latest
+            go-version: "1.21"
+          - os: windows-latest
+            go-version: "1.21"
+          - os: macos-latest
+            go-version: "1.21"
 
     steps:
       - name: Check out code
@@ -18,7 +31,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: "1.21" # 设置 Go 版本
+          go-version: ${{ matrix.go-version }} # 设置 Go 版本
 
       - name: Cache Go modules
         uses: actions/cache@v3
@@ -32,15 +45,17 @@ jobs:
         run: |
           go mod tidy
 
-      - name: Build the Go executable
+      - name: Build the Go executable for ${{ matrix.os }}
         run: |
-          go build -o action.exe .
+          GOOS=${{ matrix.os == 'windows-latest' && 'windows' || matrix.os == 'macos-latest' && 'darwin' || 'linux' }} \
+          GOARCH=amd64 go build -o action-${{ matrix.os }}.exe .
+        shell: bash
 
       - name: Upload the executable as an artifact
         uses: actions/upload-artifact@v3
         with:
-          name: action-executable
-          path: action.exe
+          name: action-${{ matrix.os }}-executable
+          path: action-${{ matrix.os }}.exe
 
   release:
     runs-on: ubuntu-latest
@@ -52,6 +67,9 @@ jobs:
       - name: Upload the release
         uses: softprops/action-gh-release@v1
         with:
-          files: action.exe
+          files: |
+            action-ubuntu-latest.exe
+            action-windows-latest.exe
+            action-macos-latest.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
