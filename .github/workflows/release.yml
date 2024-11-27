@@ -48,14 +48,19 @@ jobs:
       - name: Build the Go executable for ${{ matrix.os }}
         run: |
           GOOS=${{ matrix.os == 'windows-latest' && 'windows' || matrix.os == 'macos-latest' && 'darwin' || 'linux' }} \
-          GOARCH=amd64 go build -o action-${{ matrix.os }}.exe .
+          GOARCH=amd64 go build -o action-${{ matrix.os }} .
         shell: bash
+
+      - name: List generated files
+        run: |
+          echo "Generated files:"
+          ls -la  # 列出生成的文件，确认它们是否存在
 
       - name: Upload the executable as an artifact
         uses: actions/upload-artifact@v3
         with:
           name: action-${{ matrix.os }}-executable
-          path: action-${{ matrix.os }}.exe
+          path: action-${{ matrix.os }}
 
   release:
     runs-on: ubuntu-latest
@@ -68,8 +73,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            action-ubuntu-latest.exe
-            action-windows-latest.exe
-            action-macos-latest.exe
+            action-linux
+            action-windows.exe
+            action-darwin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
