@@ -53,7 +53,7 @@ jobs:
       - name: List generated files
         run: |
           echo "Generated files:"
-          if [ "${{ matrix.os }}" == "windows-latest" ]; then dir; else ls -la; fi
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then dir&&mv action-windows-latest action-windows-latest.exe; else ls -la; fi
         shell: bash
 
       - name: Upload the executable as an artifact
@@ -92,7 +92,7 @@ jobs:
         with:
           files: |
             action-ubuntu-latest
-            action-windows-latest  
+            action-windows-latest-executable.exe  # Windows 工件加上 .exe 后缀  
             action-macos-latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
