@@ -2,8 +2,10 @@ name: Release
 
 on:
   push:
-    tags:
-      - "v*.*.*"
+    branches:
+      - main # 或者你希望监听的其他分支
+    paths:
+      - ".github/workflows/**" # 只在修改 GitHub Actions 工作流文件时触发
 
 permissions:
   contents: write # 允许写入仓库内容（包括创建 Releases）
@@ -53,7 +55,7 @@ jobs:
       - name: List generated files
         run: |
           echo "Generated files:"
-          if [ "${{ matrix.os }}" == "windows-latest" ]; then mv action-windows-latest action-windows-latest.exe&&dir; else ls -la; fi
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then powershell Rename-Item action-windows-latest action-windows-latest.exe; else ls -la; fi
         shell: bash
 
       - name: Upload the executable as an artifact
