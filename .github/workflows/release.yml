@@ -5,7 +5,7 @@ on:
     branches:
       - main # 确保推送到 main 分支触发工作流
     tags:
-      - "v1.0.2"
+      - "v*.*.*"
 permissions:
   contents: write # 允许写入仓库内容（包括创建 Releases）
 
