@@ -2,11 +2,8 @@ name: Go Build and Release
 
 on:
   push:
-    branches:
-      - master # 只在 main 分支推送时触发
-  pull_request:
-    branches:
-      - master # 只在 main 分支的 Pull Request 时触发
+    tags:
+      - "v*" # 监听所有以 v 开头的标签
 
 jobs:
   build:
