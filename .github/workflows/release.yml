@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - "v*" # 监听所有以 v 开头的标签
+permissions:
+  contents: write # 允许写入仓库内容（包括创建 Releases）
 
 jobs:
   build:
