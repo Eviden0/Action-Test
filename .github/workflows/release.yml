@@ -59,8 +59,8 @@ jobs:
       - name: Upload the executable as an artifact
         uses: actions/upload-artifact@v3
         with:
-          name: action-${{ matrix.os }}-executable # 为每个平台上传不同的工件
-          path: action-${{ matrix.os }}
+          name: action-${{ matrix.os }}-executable # 上传对应平台的可执行文件
+          path: action-${{ matrix.os }} # 上传文件
 
   release:
     runs-on: ubuntu-latest
@@ -69,22 +69,22 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Download build artifacts
+      - name: Download Ubuntu build artifact
         uses: actions/download-artifact@v3
         with:
-          name: action-ubuntu-latest-executable # 显式指定工件名
+          name: action-ubuntu-latest-executable # 下载 Ubuntu 工件
           path: .
 
       - name: Download Windows build artifact
         uses: actions/download-artifact@v3
         with:
-          name: action-windows-latest-executable # Windows 工件名
+          name: action-windows-latest-executable # 下载 Windows 工件
           path: .
 
       - name: Download macOS build artifact
         uses: actions/download-artifact@v3
         with:
-          name: action-macos-latest-executable # macOS 工件名
+          name: action-macos-latest-executable # 下载 macOS 工件
           path: .
 
       - name: Upload the release
@@ -92,7 +92,7 @@ jobs:
         with:
           files: |
             action-ubuntu-latest-executable
-            action-windows-latest-executable.exe
+            action-windows-latest-executable  
             action-macos-latest-executable
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
