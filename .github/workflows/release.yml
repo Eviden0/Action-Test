@@ -47,7 +47,7 @@ jobs:
       - name: Build the Go executable for ${{ matrix.os }}
         run: |
           GOOS=${{ matrix.os == 'windows-latest' && 'windows' || matrix.os == 'macos-latest' && 'darwin' || 'linux' }} \
-          GOARCH=amd64 go build -o action-${{ matrix.os }} .  # 为每个平台生成不同的可执行文件
+          GOARCH=amd64 go build -o action-${{ matrix.os }} .
         shell: bash
 
       - name: List generated files
@@ -72,15 +72,27 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: action-${{ matrix.os }}-executable # 使用与上传时匹配的工件名
+          name: action-ubuntu-latest-executable # 显式指定工件名
+          path: .
+
+      - name: Download Windows build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: action-windows-latest-executable # Windows 工件名
+          path: .
+
+      - name: Download macOS build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: action-macos-latest-executable # macOS 工件名
           path: .
 
       - name: Upload the release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            action-ubuntu-latest
-            action-windows-latest.exe  # Windows 平台文件名需要加上 .exe 后缀
-            action-macos-latest
+            action-ubuntu-latest-executable
+            action-windows-latest-executable.exe
+            action-macos-latest-executable
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
