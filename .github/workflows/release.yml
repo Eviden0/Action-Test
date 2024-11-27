@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
 
 permissions:
   contents: write # 允许写入仓库内容（包括创建 Releases）
@@ -47,7 +47,7 @@ jobs:
       - name: Build the Go executable for ${{ matrix.os }}
         run: |
           GOOS=${{ matrix.os == 'windows-latest' && 'windows' || matrix.os == 'macos-latest' && 'darwin' || 'linux' }} \
-          GOARCH=amd64 go build -o action-${{ matrix.os }} .
+          GOARCH=amd64 go build -o action-${{ matrix.os }} .  # 为每个平台生成不同的可执行文件
         shell: bash
 
       - name: List generated files
@@ -59,7 +59,7 @@ jobs:
       - name: Upload the executable as an artifact
         uses: actions/upload-artifact@v3
         with:
-          name: action-${{ matrix.os }}-executable
+          name: action-${{ matrix.os }}-executable # 为每个平台上传不同的工件
           path: action-${{ matrix.os }}
 
   release:
@@ -72,7 +72,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: action-${{ matrix.os }}-executable
+          name: action-${{ matrix.os }}-executable # 使用与上传时匹配的工件名
           path: .
 
       - name: Upload the release
@@ -80,7 +80,7 @@ jobs:
         with:
           files: |
             action-ubuntu-latest
-            action-windows-latest
+            action-windows-latest.exe  # Windows 平台文件名需要加上 .exe 后缀
             action-macos-latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
