@@ -3,10 +3,9 @@ name: Release
 on:
   push:
     branches:
-      - master # 或者你希望监听的其他分支
-    paths:
-      - ".github/workflows/**" # 只在修改 GitHub Actions 工作流文件时触发
-
+      - main # 确保推送到 main 分支触发工作流
+    tags:
+      - "v1.0.2"
 permissions:
   contents: write # 允许写入仓库内容（包括创建 Releases）
 
