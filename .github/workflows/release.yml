@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - main # 确保推送到 main 分支触发工作流
+      - master # 确保推送到 master 分支触发工作流
     tags:
       - "v*.*.*"
 permissions:
